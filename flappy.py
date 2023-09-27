@@ -4,8 +4,8 @@ import random
 import neat
 
 
-IA_JOGANDO = True
-CANOS_MEXENDO = True
+IA_JOGANDO = False
+CANOS_MEXENDO = False
 GERACAO = 0
 
 TELA_LARGURA = 500
@@ -257,10 +257,11 @@ def main(genomas, config):
 
         for i, passaro in enumerate(jogo.passaros):
             passaro.mover()
-            lista_genoma[i].fitness += 0.1
-            output = redes[i].activate((passaro.y, abs(passaro.y - jogo.canos[indx_cano].altura), abs(passaro.y - jogo.canos[indx_cano].pos_base)))
-            if output[0] > 0.5:
-                passaro.pular()
+            if IA_JOGANDO:
+                lista_genoma[i].fitness += 0.1
+                output = redes[i].activate((passaro.y, abs(passaro.y - jogo.canos[indx_cano].altura), abs(passaro.y - jogo.canos[indx_cano].pos_base)))
+                if output[0] > 0.5:
+                    passaro.pular()
 
         jogo.chao.mover()
 
@@ -283,8 +284,9 @@ def main(genomas, config):
 
         if adiconar_cano:
             jogo.pontuacao += 1
-            for genoma in lista_genoma:
-                genoma.fitness += 5
+            if IA_JOGANDO:
+                for genoma in lista_genoma:
+                    genoma.fitness += 5
 
             jogo.canos.append(Cano(600))
 
